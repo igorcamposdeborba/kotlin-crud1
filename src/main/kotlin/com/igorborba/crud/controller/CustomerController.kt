@@ -1,37 +1,33 @@
 package com.igorborba.crud.controller
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.igorborba.crud.domain.dto.CustomerDTO
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.client.HttpClientErrorException.NotFound
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.net.URI
-import java.util.Optional
-import java.util.UUID
 
 @RestController
 @RequestMapping("/customer")
 class CustomerController {
-    // !todo: implement model for this class
+    // !todo: implement service for this class in all endpoints
+    val objectMapper = jacksonObjectMapper()
 
     @GetMapping(path = ["/", ""])
     fun findAllCustomer(): ResponseEntity<CustomerDTO>{
-        return ResponseEntity.ok().body(CustomerDTO(UUID.randomUUID(), "Igor", "igor@hotmail.com"))
+        return ResponseEntity.ok().body(CustomerDTO("Igor", "igor@hotmail.com"))
     }
 
     @Throws(ResponseStatusException::class)
     @PostMapping("/email")
     fun findByEmail(@RequestBody email: String): ResponseEntity<CustomerDTO> {
-        val customer = listOf(CustomerDTO(UUID.randomUUID(), "Roberto", "roberto@hotmail.com"),
-                              CustomerDTO(UUID.randomUUID(), "Igor", "igor@hotmail.com")
-                             ).find { it.email.equals(email, ignoreCase = true) }
-                             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        val customerDTO : CustomerDTO = findCustomer(email)
 
-        return ResponseEntity.ok().body(customer)
+        return ResponseEntity.ok().body(customerDTO)
     }
 
     @PostMapping(path = ["/", ""])
@@ -42,5 +38,25 @@ class CustomerController {
         return runCatching {
             ResponseEntity.created(uri).body(customerDTO)
         }.getOrThrow()
+    }
+
+    @PutMapping(path = ["/", ""])
+    fun updateCustomer(@Valid @RequestBody customer: CustomerDTO): ResponseEntity<CustomerDTO>{
+        val customerDTO : CustomerDTO = findCustomer(customer.email)
+
+        customerDTO.let {
+            if (it != null){
+                objectMapper.readValue<CustomerDTO>(it.toString())
+            }
+        }
+
+        return ResponseEntity.ok().body(customer)
+    }
+
+    private fun findCustomer(email: String): CustomerDTO{
+        return listOf(CustomerDTO("Roberto", "roberto@hotmail.com"),
+            CustomerDTO( "Igor", "igor@hotmail.com")
+        ).find { it.email.equals(email, ignoreCase = true) }
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
     }
 }
