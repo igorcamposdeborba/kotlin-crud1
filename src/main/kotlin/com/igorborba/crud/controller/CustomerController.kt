@@ -1,5 +1,6 @@
 package com.igorborba.crud.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.igorborba.crud.domain.dto.CustomerDTO
@@ -22,8 +23,8 @@ class CustomerController {
         return ResponseEntity.ok().body(CustomerDTO("Igor", "igor@hotmail.com"))
     }
 
-    @Throws(ResponseStatusException::class)
     @PostMapping("/email")
+    @Throws(ResponseStatusException::class)
     fun findByEmail(@RequestBody email: String): ResponseEntity<CustomerDTO> {
         val customerDTO : CustomerDTO = findCustomer(email)
 
@@ -41,21 +42,22 @@ class CustomerController {
     }
 
     @PutMapping(path = ["/", ""])
-    fun updateCustomer(@Valid @RequestBody customer: CustomerDTO): ResponseEntity<CustomerDTO>{
-        val customerDTO : CustomerDTO = findCustomer(customer.email)
+    @ResponseStatus(HttpStatus.OK)
+    fun updateCustomer(@RequestBody customer: CustomerDTO): ResponseEntity<CustomerDTO>{
+        var customerDTO : CustomerDTO = findCustomer(customer.email)
 
-        customerDTO.let {
-            if (it != null){
-                objectMapper.readValue<CustomerDTO>(it.toString())
-            }
+        val updatedCustomer: CustomerDTO? = customer?.let {
+            val serializedCustomer = objectMapper.writeValueAsString(it)
+            objectMapper.readValue(serializedCustomer, CustomerDTO::class.java)
+            // !todo: Atualizar no banco de dados aqui
         }
 
-        return ResponseEntity.ok().body(customer)
+        return ResponseEntity.ok().body(updatedCustomer)
     }
 
     private fun findCustomer(email: String): CustomerDTO{
         return listOf(CustomerDTO("Roberto", "roberto@hotmail.com"),
-            CustomerDTO( "Igor", "igor@hotmail.com")
+                      CustomerDTO( "Igor", "igor@hotmail.com")
         ).find { it.email.equals(email, ignoreCase = true) }
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
     }
