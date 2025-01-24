@@ -23,12 +23,10 @@ class CustomerService {
         return customers
     }
 
-    @Throws(ResponseStatusException::class)
     fun findByEmail(email: String): CustomerDTO {
         return findCustomer(email)
     }
 
-    @Throws(ResponseStatusException::class)
     fun findById(id: Int): CustomerDTO { // id na url: PathVariable
         return findCustomer(id)
     }
@@ -40,7 +38,6 @@ class CustomerService {
         }.getOrThrow()
     }
 
-    @Throws(ResponseStatusException::class)
     fun updateCustomer(customer: CustomerDTO): CustomerDTO {
         return customers.runCatching {
             filter{ it.email.equals(customer.email) }
@@ -53,10 +50,12 @@ class CustomerService {
         customers.removeIf{ it.email == email }
     }
 
+    @Throws(ResponseStatusException::class)
     private fun findCustomer(email: String): CustomerDTO{
         return customers.find { it.email.equals(email, ignoreCase = true) }
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
     }
+    @Throws(ResponseStatusException::class)
     private fun findCustomer(id: Int): CustomerDTO{ // sobrecarga
         return customers.find { it.id.equals(id) }
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
