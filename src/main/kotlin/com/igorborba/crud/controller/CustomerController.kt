@@ -37,6 +37,12 @@ class CustomerController {
         return ResponseEntity.ok().body(customerDTO)
     }
 
+    @PostMapping(name = "/id/")
+    @Throws(ResponseStatusException::class)
+    fun findById(@PathVariable id: Int): ResponseEntity<CustomerDTO> { // id na url: PathVariable
+        return ResponseEntity.ok().body(findCustomer(id))
+    }
+
     @PostMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.CREATED)
     fun createCustomer(@Valid @RequestBody customerDTO: CustomerDTO): ResponseEntity<CustomerDTO?> {
@@ -70,5 +76,9 @@ class CustomerController {
     private fun findCustomer(email: String): CustomerDTO{
         return customers.find { it.email.equals(email, ignoreCase = true) }
                                 ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+    }
+    private fun findCustomer(id: Int): CustomerDTO{ // sobrecarga
+        return customers.find { it.id.equals(id) }
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
     }
 }
