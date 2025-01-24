@@ -21,9 +21,12 @@ class CustomerController {
     val customers: MutableList<CustomerDTO> = mutableListOf<CustomerDTO>(CustomerDTO("Roberto", "roberto@hotmail.com"),
                                                                          CustomerDTO( "Igor", "igor@hotmail.com"))
 
-    @GetMapping(path = ["/", ""])
-    fun findAllCustomer(): ResponseEntity<CustomerDTO>{
-        return ResponseEntity.ok().body(CustomerDTO("Igor", "igor@hotmail.com"))
+    @GetMapping(path = ["/", ""]) // parametro de UTM: RequestParam
+    fun findAllCustomer(@RequestParam name: String?): ResponseEntity<List<CustomerDTO>>{
+        name?.let { // filtrar por contém parte do nome. // let roda no escopo local. ? acessa se name não for null
+             return ResponseEntity.ok().body(customers.filter { it.name.contains(name, true) })
+        }
+        return ResponseEntity.ok().body(customers)
     }
 
     @PostMapping("/email")
