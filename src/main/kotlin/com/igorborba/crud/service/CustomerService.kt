@@ -2,14 +2,10 @@ package com.igorborba.crud.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.igorborba.crud.domain.dto.CustomerDTO
-import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import java.net.URI
 
 @Service
 class CustomerService {
@@ -39,20 +35,18 @@ class CustomerService {
 
     fun createCustomer(customerDTO: CustomerDTO): CustomerDTO {
         return runCatching {
-            customerDTO
+            customers.add(customerDTO)
+            return customerDTO
         }.getOrThrow()
     }
 
-    fun updateCustomer(customer: CustomerDTO): CustomerDTO? {
-        var customerDTO : CustomerDTO = findCustomer(customer.email)
-
-        val updatedCustomer: CustomerDTO? = customer?.let {
-            val serializedCustomer = objectMapper.writeValueAsString(it)
-            objectMapper.readValue(serializedCustomer, CustomerDTO::class.java)
-            // !todo: Atualizar no banco de dados aqui
+    @Throws(ResponseStatusException::class)
+    fun updateCustomer(customer: CustomerDTO): CustomerDTO {
+        return customers.runCatching {
+            filter{ it.email.equals(customer.email) }
+            .map{ objectMapper.updateValue(it, customer) }[0]
         }
-
-        return updatedCustomer
+        .getOrThrow()
     }
 
     fun deleteCustomer(email: String): Unit {

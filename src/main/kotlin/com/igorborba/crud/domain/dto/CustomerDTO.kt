@@ -9,7 +9,7 @@ class CustomerDTO(
     var name: String,
     @NotBlank (message = "O e-mail é obrigatório")
     @Email (message = "O e-mail foi digitado errado")
-    var email: String,
+    val email: String,
     var cpf: String? = null
 ) {
     var id: UUID = UUID.randomUUID()

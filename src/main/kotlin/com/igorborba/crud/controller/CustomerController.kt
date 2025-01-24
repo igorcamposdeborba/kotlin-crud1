@@ -1,8 +1,5 @@
 package com.igorborba.crud.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.service.CustomerService
 import jakarta.validation.Valid
@@ -18,7 +15,7 @@ import java.net.URI
 class CustomerController (
     val customerService : CustomerService // construtor para injetar dependencias e criar atributo
 ) {
-    
+
     @GetMapping(path = ["/", ""]) // parametro de UTM: RequestParam
     fun findAllCustomer(@RequestParam name: String?): ResponseEntity<List<CustomerDTO>> {
         return ResponseEntity.ok().body(customerService.findAllCustomer(name))
