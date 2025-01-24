@@ -18,6 +18,9 @@ class CustomerController {
     // !todo: implement service for this class in all endpoints
     val objectMapper = jacksonObjectMapper()
 
+    val customers: MutableList<CustomerDTO> = mutableListOf<CustomerDTO>(CustomerDTO("Roberto", "roberto@hotmail.com"),
+                                                                         CustomerDTO( "Igor", "igor@hotmail.com"))
+
     @GetMapping(path = ["/", ""])
     fun findAllCustomer(): ResponseEntity<CustomerDTO>{
         return ResponseEntity.ok().body(CustomerDTO("Igor", "igor@hotmail.com"))
@@ -55,10 +58,14 @@ class CustomerController {
         return ResponseEntity.ok().body(updatedCustomer)
     }
 
+    @DeleteMapping(path = ["/", ""])
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteCustomer(@RequestBody email: String): Unit {
+        customers.removeIf{ it.email == email }
+    }
+
     private fun findCustomer(email: String): CustomerDTO{
-        return listOf(CustomerDTO("Roberto", "roberto@hotmail.com"),
-                      CustomerDTO( "Igor", "igor@hotmail.com")
-        ).find { it.email.equals(email, ignoreCase = true) }
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        return customers.find { it.email.equals(email, ignoreCase = true) }
+                                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
     }
 }
