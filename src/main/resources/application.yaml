@@ -1,11 +1,16 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: none
+      dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true  # SQL queries para debug
 
   datasource:
-    url: jdbc:mysql://localhost:3306/customer_test?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/customer_test?createDatabaseIfNotExist=true&characterEncoding=utf8&characterSetResults=utf8&serverTimezone=UTC
     username: root
-    password: 123456
+    password: 123
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  aop:
+    # Disable AspectJ for bytecode transformation
+    proxy-target-class: false

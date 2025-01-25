@@ -1,20 +1,22 @@
 package com.igorborba.crud.domain.entities
 
+import com.igorborba.crud.configs.database.DatabaseConfig
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
-import org.springframework.data.annotation.Id
-import java.util.UUID
+import jakarta.persistence.Id
 
 
 @Entity(name = "customer")
-class Customer(
-
+class Customer (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID,
+    @Column(length = DatabaseConfig.ID_LENGTH_MYSQL, unique = DatabaseConfig.IS_UNIQUE, nullable = DatabaseConfig.IS_NULLABLE)
+    var id: String?, // UUID é criado no banco de dados e legível para humanos sendo String
     var name: String,
     var email: String,
-    var cpf: String
+    var cpf: String?
 ) {
+    constructor() : this(null, "", "", "")
 }
