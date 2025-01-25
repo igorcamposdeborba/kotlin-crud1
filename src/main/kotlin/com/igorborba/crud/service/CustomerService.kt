@@ -40,16 +40,6 @@ class CustomerService (val customersDatabase : CustomerRepository) {
     }
 
     fun updateCustomer(customer: CustomerDTO): CustomerDTO {
-//        return runCatching {
-//            val customerFinded : Customer = customersDatabase.findByEmail(customer.email)
-//            if (customerFinded != null){
-//                val customerConverted : Customer= Utils.convertValue(customer, Customer::class.java)
-//                val customerUpdated: Customer = customersDatabase.save(customerConverted)
-//                return Utils.convertValue(customerUpdated, CustomerDTO::class.java)
-//            } else {
-//                return throw NotFoundException()
-//            }
-//        }.getOrThrow()
         return runCatching {
             val customerFinded : Customer = Utils.convertValue(customersDatabase.findByEmail(customer.email), Customer::class.java)
             val customerUpdated: Customer = customersDatabase.save(customerFinded)
@@ -60,14 +50,6 @@ class CustomerService (val customersDatabase : CustomerRepository) {
     fun deleteCustomer(email: String): Unit {
         customersDatabase.delete(Utils.convertValue(findByEmail(email), Customer::class.java))
     }
-//    fun updateCustomer(customer: CustomerDTO): CustomerDTO {
-//        return customersDatabase.runCatching {
-//            filter{ it.email.equals(customer.email) }         // !todo: equals deixa nullPointerException acontecer. Se fosse aceitar o lint == não daria exception porque colocaria o objeto como null e nunca cairia no throw
-//            .map{ objectMapper.updateValue(it, customer) }[0] // adicional 1: Java x Kotlin: é completamente diferente de Java: == em java compara endereços de memória que em kotlin compara o valor.
-//        }                                                     //                             equals() em java compara o valor desde que tenha um @override implementado do equals
-//                                                              //                             (lombok sobrescreve o equals com todos os atributos por padrão)
-//        .getOrThrow()                                         // adicional 2: JavaScript x Kotlin: em Kotlin === compara sempre endereço de memória ou tipo de dado para tipos primitivos
-//    }                                                         //                             (diferente do JavaScript que === compara tipo e valor)
 
     private fun findCustomer(value: String): CustomerDTO {
         return runCatching {
