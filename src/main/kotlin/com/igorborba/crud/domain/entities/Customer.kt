@@ -6,17 +6,17 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-
+import lombok.NoArgsConstructor
 
 @Entity(name = "customer")
+@NoArgsConstructor
 class Customer (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(length = DatabaseConfig.ID_LENGTH_MYSQL, unique = DatabaseConfig.IS_UNIQUE, nullable = DatabaseConfig.IS_NULLABLE)
     var id: String?, // UUID é criado no banco de dados e legível para humanos sendo String
     var name: String,
-    var email: String,
+    var email: String?,
     var cpf: String?
 ) {
-    constructor() : this(null, "", "", "")
 }
