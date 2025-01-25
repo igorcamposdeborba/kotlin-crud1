@@ -41,9 +41,14 @@ class CustomerService (val customersDatabase : CustomerRepository) {
 
     fun updateCustomer(customer: CustomerDTO): CustomerDTO {
         return runCatching {
-            val customerFinded : Customer = Utils.convertValue(customersDatabase.findByEmail(customer.email), Customer::class.java)
-            val customerUpdated: Customer = customersDatabase.save(customerFinded)
-            return Utils.convertValue(customerUpdated, CustomerDTO::class.java)
+            val customerFinded: Customer = customersDatabase.findByEmail(customer.email)
+            if (customerFinded != null){
+                customer.id = customerFinded.id
+                val customerUpdated : Customer = Utils.convertValue(customer, Customer::class.java)
+                return Utils.convertValue(customersDatabase.save(customerUpdated), CustomerDTO::class.java)
+            } else {
+                return customer
+            }
 
         }.getOrThrow()
     }

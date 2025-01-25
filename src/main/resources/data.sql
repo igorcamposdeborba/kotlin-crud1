@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS customer(
 
 SELECT VERSION();
 ALTER TABLE customer ADD cpf VARCHAR(14);
-DROP TABLE customer;
 DESCRIBE customer; # mostrar configs das colunas 
+DROP TABLE customer;
 
 SELECT * FROM customer;
 

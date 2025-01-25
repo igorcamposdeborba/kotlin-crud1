@@ -7,7 +7,7 @@ import java.util.UUID
 
 class CustomerDTO(
     @Nullable
-    var id: UUID?,
+    var id: String?,
     @NotBlank (message = "O nome é obrigatório")
     var name: String,
     @NotBlank (message = "O e-mail é obrigatório")
