@@ -29,10 +29,10 @@ class BookController (
         return ResponseEntity.ok().body(bookService.findCustomerByName(name))
     }
 
-    @GetMapping("/status", "/status/")
-    fun findByStatus(@RequestParam status: String): ResponseEntity<List<BookDTO>> {
-        return ResponseEntity.ok().body(bookService.findByStatus(status))
-    }
+    @GetMapping("/status", "/status/") // return implícito ao atribuir ao métod
+    fun findByStatus(@RequestParam status: String): ResponseEntity<List<BookDTO>> =
+        ResponseEntity.ok().body(bookService.findByStatus(status))
+
 
     @GetMapping("/{id}")
     @Throws(ResponseStatusException::class)

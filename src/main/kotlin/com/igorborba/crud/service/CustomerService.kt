@@ -1,7 +1,12 @@
 package com.igorborba.crud.service
 
+import com.igorborba.crud.domain.dto.BookDTO
 import com.igorborba.crud.domain.dto.CustomerDTO
+import com.igorborba.crud.domain.entities.Book
 import com.igorborba.crud.domain.entities.Customer
+import com.igorborba.crud.domain.valueObjects.BookStatus
+import com.igorborba.crud.domain.valueObjects.CustomerStatus
+import com.igorborba.crud.service.repository.BookRepository
 import com.igorborba.crud.service.repository.CustomerRepository
 import com.igorborba.crud.utils.Utils
 import com.igorborba.crud.utils.objectMapper
@@ -11,7 +16,8 @@ import java.util.Objects
 import java.util.UUID
 
 @Service
-class CustomerService (val customersDatabase : CustomerRepository) {
+class CustomerService (val customersDatabase : CustomerRepository,
+                       val bookDatabase: BookRepository) {
 
     fun findAllCustomer(name: String?): List<Customer> { // o tipo do dado de entrada e de saída (Customer) -> CustomerDTO devem ser declarados por ser programação funcional
         return if (name.isNullOrBlank()) {
@@ -30,6 +36,7 @@ class CustomerService (val customersDatabase : CustomerRepository) {
 
     fun createCustomer(customerDTO: CustomerDTO): Customer {
         runCatching {
+            customerDTO.status = CustomerStatus.ATIVO
             return customersDatabase.save(objectMapper.convertValue(customerDTO, Customer::class.java))
         }.getOrThrow()
     }
@@ -39,6 +46,7 @@ class CustomerService (val customersDatabase : CustomerRepository) {
             val customerFinded: Customer = customersDatabase.findByEmail(customer.email)
             if (customerFinded != null){
                 customer.id = customerFinded.id
+                customer.status = customerFinded.status
                 val customerUpdated : Customer = Utils.convertValue(customer, Customer::class.java)
                 return customersDatabase.save(customerUpdated)
             } else {
@@ -48,7 +56,20 @@ class CustomerService (val customersDatabase : CustomerRepository) {
         }.getOrThrow()
     }
     fun deleteCustomer(email: String): Unit {
-        customersDatabase.delete(Utils.convertValue(findByEmail(email), Customer::class.java))
+        val customer : Customer = findByEmail(email)
+
+        deleteBook(customer) // DELETE LÓGICO (muda status para deletado)
+        customer.status = CustomerStatus.DELETADO
+        customersDatabase.save(customer)
+
+//      customersDatabase.delete(Utils.convertValue(customer, Customer::class.java)) // deleção persistente (caso seja implementado, mudar o deleteBook(customer) para deletar do banco de dados os livros)
+    }
+    private fun deleteBook(customer: Customer) {
+        val books: List<Book> = bookDatabase.findByCustomerId(customer.id.toString())
+        books.forEach{ it.status = BookStatus.DELETADO }
+
+        bookDatabase.saveAll(books)
+//        bookDatabase.deleteAll(books) // deleção persistente (caso seja implementado, descomentar para deletar do banco de dados os livros)
     }
 
     private fun findCustomer(value: String?): Customer {

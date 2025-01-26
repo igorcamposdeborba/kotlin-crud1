@@ -2,11 +2,8 @@ package com.igorborba.crud.domain.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.igorborba.crud.configs.database.DatabaseConfig
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import com.igorborba.crud.domain.valueObjects.CustomerStatus
+import jakarta.persistence.*
 import lombok.NoArgsConstructor
 
 @Entity(name = "customer")
@@ -19,6 +16,8 @@ class Customer (
     var id: String?, // UUID é criado no banco de dados e legível para humanos sendo String
     var name: String,
     var email: String?,
-    var cpf: String?
+    var cpf: String?,
+    @Enumerated(EnumType.STRING)
+    var status: CustomerStatus?
 ) {
 }

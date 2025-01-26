@@ -7,6 +7,7 @@ import com.igorborba.crud.domain.entities.Customer
 import com.igorborba.crud.service.CustomerService
 import com.igorborba.crud.utils.Utils
 import com.igorborba.crud.utils.objectMapper
+import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -41,6 +42,7 @@ class CustomerController (
 
     @PostMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     fun createCustomer(@Valid @RequestBody customerDTO: CustomerDTO): ResponseEntity<CustomerDTO?> {
         val uri: URI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(customerDTO).toUri()
 
@@ -51,12 +53,14 @@ class CustomerController (
 
     @PutMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     fun updateCustomer(@RequestBody customer: CustomerDTO): ResponseEntity<CustomerDTO>{
         return ResponseEntity.ok().body(convertToCustomerDTO(customerService.updateCustomer(customer)))
     }
 
     @DeleteMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     fun deleteCustomer(@RequestBody email: String): Unit {
         customerService.deleteCustomer(email)
     }

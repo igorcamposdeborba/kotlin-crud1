@@ -1,6 +1,7 @@
 package com.igorborba.crud.service
 
 import com.igorborba.crud.domain.dto.BookDTO
+import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.domain.dto.mounted.CustomerBookDTO
 import com.igorborba.crud.domain.entities.Book
 import com.igorborba.crud.domain.entities.Customer
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class BookService (val bookDatabase : BookRepository,
-                   val customerDatabase : CustomerRepository,
                    val customerService: CustomerService) {
 
     val convertToBookDTO : (Book) -> BookDTO = { it -> // não é possível criar com bloco de código no Kotlin porque ele sempre retorna a última linha por ser programação funcional
@@ -32,9 +32,6 @@ class BookService (val bookDatabase : BookRepository,
         return bookDatabase.findByStatus(BookStatus.valueOf(status.uppercase())).map(convertToBookDTO)
     }
 
-    fun findCustomerByName(name: String): List<CustomerBookDTO> {
-        return findCustomer(name)
-    }
     fun findById(id: Int): Book {
         return bookDatabase.findById(id).orElseThrow()
     }
@@ -85,7 +82,7 @@ class BookService (val bookDatabase : BookRepository,
         }.getOrThrow()
     }
 
-    private fun findCustomer(name: String): List<CustomerBookDTO> {
+    fun findCustomerByName(name: String): List<CustomerBookDTO> {
         return runCatching {
             val customersFilteredByName: List<Customer> = customerService.findAllCustomer(name)
 
@@ -93,9 +90,11 @@ class BookService (val bookDatabase : BookRepository,
                 val books: List<Book> = bookDatabase.findByCustomerId(customer.id.toString())
                 val booksDTO = books.map { convertToBookDTO(it) }
 
-                // Retorna o DTO com o nome do cliente e seus livros
                 CustomerBookDTO(customer.name, booksDTO)
             }
         }.getOrThrow()
     }
+
+
+
 }
