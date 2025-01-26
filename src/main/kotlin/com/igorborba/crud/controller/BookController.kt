@@ -31,6 +31,11 @@ class BookController (
         return ResponseEntity.ok().body(bookService.findByName(name))
     }
 
+    @GetMapping("/status", "/status/")
+    fun findByStatus(@RequestParam status: String): ResponseEntity<List<BookDTO>> {
+        return ResponseEntity.ok().body(bookService.findByStatus(status))
+    }
+
     @GetMapping("/{id}")
     @Throws(ResponseStatusException::class)
     fun findById(@PathVariable id: Int): ResponseEntity<BookDTO> {

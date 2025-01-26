@@ -25,6 +25,10 @@ class BookService (val bookDatabase : BookRepository,
         }
     }
 
+    fun findByStatus(status: String): List<BookDTO> {
+        return bookDatabase.findByStatus(BookStatus.valueOf(status.uppercase())).map(convertToBookDTO)
+    }
+
     fun findByName(name: String): BookDTO {
         return findBook(name)
     }
@@ -45,10 +49,10 @@ class BookService (val bookDatabase : BookRepository,
 
     fun updateBook(book: BookDTO): BookDTO {
         return runCatching {
-            val bookFinded: Book = bookDatabase.findByName(book.name)
+            val bookFinded: Book = if (book.id != null) bookDatabase.findById(book.id!!).orElseThrow() else bookDatabase.findByName(book.name)
             if (bookFinded != null){
-                book.id = bookFinded.id
-                book.status = bookFinded.status
+                book.id = if (book.id != null) book.id else bookFinded.id
+                book.status = if (book.status != null) book.status else bookFinded.status
                 book.customerId = bookFinded.customerId
                 val bookUpdated : Book = Utils.convertValue(book, Book::class.java)
                 return Utils.convertValue(bookDatabase.save(bookUpdated), BookDTO::class.java)

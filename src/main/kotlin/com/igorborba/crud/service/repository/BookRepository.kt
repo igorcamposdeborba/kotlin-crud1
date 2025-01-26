@@ -2,6 +2,7 @@ package com.igorborba.crud.service.repository
 
 import com.igorborba.crud.domain.entities.Book
 import com.igorborba.crud.domain.entities.Customer
+import com.igorborba.crud.domain.valueObjects.BookStatus
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -15,6 +16,8 @@ interface BookRepository: JpaRepository<Book, Int> { // : significa extends (her
     fun findByNameContaining(name: String): List<Book>
 
     fun findByName(name: String): Book
+
+    fun findByStatus(status: BookStatus): List<Book>
 
     fun findById(id: String): Book
 }
