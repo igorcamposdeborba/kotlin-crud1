@@ -20,8 +20,7 @@ class Book (
     var status: BookStatus?,
 
 //     @ManyToOne
-//    @JoinColumn(name = "customer_id")
-    @JoinColumn
+    @JoinColumn(name = "customer_id")
     var customerId: String?, // associacao
 ) {
 }

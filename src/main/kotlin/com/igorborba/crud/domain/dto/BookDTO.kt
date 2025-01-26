@@ -17,6 +17,7 @@ data class BookDTO(
     @NotBlank (message = "O preço é obrigatório")
     var price: BigDecimal,
     var status: BookStatus?,
+
     @JsonAlias("customer_id")
     var customerId: String?
 ) {

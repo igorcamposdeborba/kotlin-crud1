@@ -3,6 +3,7 @@ package com.igorborba.crud.service.repository
 import com.igorborba.crud.domain.entities.Book
 import com.igorborba.crud.domain.valueObjects.BookStatus
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 
 @Repository

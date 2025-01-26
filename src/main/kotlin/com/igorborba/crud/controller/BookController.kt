@@ -25,7 +25,7 @@ class BookController (
 
     @GetMapping(path = ["/customer", "/customer/"])
     @Throws(ResponseStatusException::class)
-    fun findCustomerByName(@RequestParam name: String): ResponseEntity<CustomerBookDTO> {
+    fun findCustomerByName(@RequestParam name: String): ResponseEntity<List<CustomerBookDTO>> {
         return ResponseEntity.ok().body(bookService.findCustomerByName(name))
     }
 

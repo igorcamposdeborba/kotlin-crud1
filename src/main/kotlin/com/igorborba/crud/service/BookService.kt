@@ -32,7 +32,7 @@ class BookService (val bookDatabase : BookRepository,
         return bookDatabase.findByStatus(BookStatus.valueOf(status.uppercase())).map(convertToBookDTO)
     }
 
-    fun findCustomerByName(name: String): CustomerBookDTO {
+    fun findCustomerByName(name: String): List<CustomerBookDTO> {
         return findCustomer(name)
     }
     fun findById(id: Int): Book {
@@ -85,14 +85,17 @@ class BookService (val bookDatabase : BookRepository,
         }.getOrThrow()
     }
 
-    private fun findCustomer(name: String): CustomerBookDTO {
+    private fun findCustomer(name: String): List<CustomerBookDTO> {
         return runCatching {
-            val customersFilteredByName : List<Customer> = customerService.findAllCustomer(name)
-            val booksFiltered : List<Book> = bookDatabase.findByCustomerId(customersFilteredByName.get(0).id.toString()) // !todo: corrigir esse get(0) -> colocar lógica para pegar o customer certo
+            val customersFilteredByName: List<Customer> = customerService.findAllCustomer(name)
 
-             val booksDTO : List<BookDTO>  = booksFiltered.map(convertToBookDTO)
+            customersFilteredByName.map { customer ->
+                val books: List<Book> = bookDatabase.findByCustomerId(customer.id.toString())
+                val booksDTO = books.map { convertToBookDTO(it) }
 
-            CustomerBookDTO(customersFilteredByName.get(0).name, booksDTO)
+                // Retorna o DTO com o nome do cliente e seus livros
+                CustomerBookDTO(customer.name, booksDTO)
+            }
         }.getOrThrow()
     }
 }
