@@ -1,9 +1,11 @@
 package com.igorborba.crud.domain.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import jakarta.annotation.Nullable
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class CustomerDTO(
     @Nullable
     var id: String?,

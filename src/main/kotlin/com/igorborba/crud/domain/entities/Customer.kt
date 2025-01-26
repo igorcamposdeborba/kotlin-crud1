@@ -1,5 +1,6 @@
 package com.igorborba.crud.domain.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.igorborba.crud.configs.database.DatabaseConfig
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor
 
 @Entity(name = "customer")
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 class Customer (
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

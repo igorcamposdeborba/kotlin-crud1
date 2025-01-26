@@ -13,41 +13,36 @@ import java.util.UUID
 @Service
 class CustomerService (val customersDatabase : CustomerRepository) {
 
-    val convertToCustomerDTO : (Customer) -> CustomerDTO = { it -> // não é possível criar com bloco de código no Kotlin porque ele sempre retorna a última linha por ser programação funcional
-        objectMapper.convertValue(it, CustomerDTO::class.java)
-    }
-
-    fun findAllCustomer(name: String?): List<CustomerDTO> { // o tipo do dado de entrada e de saída (Customer) -> CustomerDTO devem ser declarados por ser programação funcional
+    fun findAllCustomer(name: String?): List<Customer> { // o tipo do dado de entrada e de saída (Customer) -> CustomerDTO devem ser declarados por ser programação funcional
         return if (name.isNullOrBlank()) {
-            customersDatabase.findAll().map(convertToCustomerDTO)
+            customersDatabase.findAll()
         } else {
-            customersDatabase.findAllByNameContaining(name).map(convertToCustomerDTO)
+            customersDatabase.findAllByNameContaining(name)
         }
     }
 
-    fun findByEmail(email: String): CustomerDTO {
+    fun findByEmail(email: String): Customer {
         return findCustomer(email)
     }
-    fun findById(id: String): CustomerDTO {
+    fun findById(id: String?): Customer {
         return findCustomer(id)
     }
 
-    fun createCustomer(customerDTO: CustomerDTO): CustomerDTO {
+    fun createCustomer(customerDTO: CustomerDTO): Customer {
         runCatching {
-            val customerSaved : Customer = customersDatabase.save(objectMapper.convertValue(customerDTO, Customer::class.java))
-            return objectMapper.convertValue(customerSaved, customerDTO::class.java)
+            return customersDatabase.save(objectMapper.convertValue(customerDTO, Customer::class.java))
         }.getOrThrow()
     }
 
-    fun updateCustomer(customer: CustomerDTO): CustomerDTO {
+    fun updateCustomer(customer: CustomerDTO): Customer {
         return runCatching {
             val customerFinded: Customer = customersDatabase.findByEmail(customer.email)
             if (customerFinded != null){
                 customer.id = customerFinded.id
                 val customerUpdated : Customer = Utils.convertValue(customer, Customer::class.java)
-                return Utils.convertValue(customersDatabase.save(customerUpdated), CustomerDTO::class.java)
+                return customersDatabase.save(customerUpdated)
             } else {
-                return customer
+                return Utils.convertValue(customer, Customer::class.java)
             }
 
         }.getOrThrow()
@@ -56,12 +51,12 @@ class CustomerService (val customersDatabase : CustomerRepository) {
         customersDatabase.delete(Utils.convertValue(findByEmail(email), Customer::class.java))
     }
 
-    private fun findCustomer(value: String?): CustomerDTO {
+    private fun findCustomer(value: String?): Customer {
         return runCatching {
             if (value.toString().contains("@")){
-                Utils.convertValue(customersDatabase.findByEmail(value), CustomerDTO::class.java)
+                customersDatabase.findByEmail(value)
             } else {
-                Utils.convertValue(customersDatabase.findById(value), CustomerDTO::class.java)
+                customersDatabase.findById(value)
             }
         }.getOrThrow()
     }

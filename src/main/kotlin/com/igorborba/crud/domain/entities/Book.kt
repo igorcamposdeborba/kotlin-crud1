@@ -1,5 +1,6 @@
 package com.igorborba.crud.domain.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.igorborba.crud.configs.database.DatabaseConfig
 import com.igorborba.crud.domain.valueObjects.BookStatus
 import jakarta.persistence.*
@@ -8,19 +9,20 @@ import java.math.BigDecimal
 
 @Entity(name = "book")
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 class Book (
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(length = DatabaseConfig.ID_LENGTH_MYSQL, unique = DatabaseConfig.IS_UNIQUE, nullable = DatabaseConfig.IS_NULLABLE)
-    var id: String?, // UUID é criado no banco de dados e legível para humanos sendo String
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Int?, // UUID é criado no banco de dados e legível para humanos sendo String
     var name: String,
     var price: BigDecimal,
 
     @Enumerated(EnumType.STRING)
     var status: BookStatus?,
 
-    @ManyToOne
+//    @ManyToOne
     @JoinColumn(name = "customer_id")
-    var customer: Customer? // associacao
+    var customerId: String? // associacao
+
 ) {
 }
