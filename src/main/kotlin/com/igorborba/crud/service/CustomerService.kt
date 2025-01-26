@@ -44,13 +44,14 @@ class CustomerService (val customersDatabase : CustomerRepository,
     fun updateCustomer(customer: CustomerDTO): Customer {
         return runCatching {
             val customerFinded: Customer = customersDatabase.findByEmail(customer.email)
-            if (customerFinded != null){
+
+            if (customerFinded != null && customerFinded.status != CustomerStatus.DELETADO && customerFinded.status != CustomerStatus.DESATIVADO){
                 customer.id = customerFinded.id
-                customer.status = customerFinded.status
+                customer.status = if (customer.status != null) customer.status else customerFinded.status
                 val customerUpdated : Customer = Utils.convertValue(customer, Customer::class.java)
                 return customersDatabase.save(customerUpdated)
             } else {
-                return Utils.convertValue(customer, Customer::class.java)
+                throw IllegalArgumentException("Não é possível alterar quando o status é ${customerFinded.status}")
             }
 
         }.getOrThrow()

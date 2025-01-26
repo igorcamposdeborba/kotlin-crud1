@@ -50,14 +50,15 @@ class BookService (val bookDatabase : BookRepository,
     fun updateBook(book: BookDTO): BookDTO {
         return runCatching {
             val bookFinded: Book = if (book.id != null) bookDatabase.findById(book.id!!).orElseThrow() else bookDatabase.findByTitle(book.title)
-            if (bookFinded != null){
+
+            if (bookFinded != null && bookFinded.status != BookStatus.DELETADO && bookFinded.status != BookStatus.CANCELADO){
                 book.id = if (book.id != null) book.id else bookFinded.id
                 book.status = if (book.status != null) book.status else bookFinded.status
                 book.customerId = bookFinded.customerId
                 val bookUpdated : Book = Utils.convertValue(book, Book::class.java)
                 return Utils.convertValue(bookDatabase.save(bookUpdated), BookDTO::class.java)
             } else {
-                return book
+                throw IllegalArgumentException("Não é possível alterar quando o status é ${bookFinded.status.toString().lowercase()}")
             }
 
         }.getOrThrow()
