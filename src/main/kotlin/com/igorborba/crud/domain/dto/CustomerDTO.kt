@@ -4,7 +4,7 @@ import jakarta.annotation.Nullable
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 
-class CustomerDTO(
+data class CustomerDTO(
     @Nullable
     var id: String?,
     @NotBlank (message = "O nome é obrigatório")

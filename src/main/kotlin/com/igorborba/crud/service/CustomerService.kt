@@ -56,9 +56,9 @@ class CustomerService (val customersDatabase : CustomerRepository) {
         customersDatabase.delete(Utils.convertValue(findByEmail(email), Customer::class.java))
     }
 
-    private fun findCustomer(value: String): CustomerDTO {
+    private fun findCustomer(value: String?): CustomerDTO {
         return runCatching {
-            if (value.contains("@")){
+            if (value.toString().contains("@")){
                 Utils.convertValue(customersDatabase.findByEmail(value), CustomerDTO::class.java)
             } else {
                 Utils.convertValue(customersDatabase.findById(value), CustomerDTO::class.java)

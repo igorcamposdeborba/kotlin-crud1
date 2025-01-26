@@ -34,9 +34,10 @@ class BookService (val bookDatabase : BookRepository,
 
     fun createBook(bookDTO: BookDTO): BookDTO {
         runCatching {
-            bookDTO.status = BookStatus.ATIVO
-            bookDTO.customer = customerService.findById(bookDTO.customerId)
-            val bookSaved : Book = bookDatabase.save(objectMapper.convertValue(bookDTO, Book::class.java))
+            val book : BookDTO = bookDTO.copy()
+            book.status = BookStatus.ATIVO
+            book.customer = customerService.findById(bookDTO.customerId)
+            val bookSaved : Book = bookDatabase.save(objectMapper.convertValue(book, Book::class.java))
             return objectMapper.convertValue(bookSaved, BookDTO::class.java)
         }.getOrThrow()
     }

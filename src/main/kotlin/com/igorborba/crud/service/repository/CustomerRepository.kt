@@ -13,7 +13,7 @@ interface CustomerRepository: JpaRepository<Customer, UUID> { // : significa ext
 
     fun findAllByNameContaining(name: String?): List<Customer>  // Modificado de "findAllByName" para "findByName"
 
-    fun findByEmail(email: String): Customer
+    fun findByEmail(email: String?): Customer
 
-    fun findById(id: String): Customer
+    fun findById(id: String?): Customer
 }
