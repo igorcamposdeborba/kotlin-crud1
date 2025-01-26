@@ -1,9 +1,8 @@
 package com.igorborba.crud.controller
 
 import com.igorborba.crud.domain.dto.BookDTO
-import com.igorborba.crud.domain.dto.CustomerDTO
+import com.igorborba.crud.domain.dto.mounted.CustomerBookDTO
 import com.igorborba.crud.service.BookService
-import com.igorborba.crud.service.CustomerService
 import com.igorborba.crud.utils.Utils
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -16,8 +15,7 @@ import java.net.URI
 @RestController
 @RequestMapping("/book")
 class BookController (
-    val bookService : BookService, // construtor para injetar dependencias e criar atributo
-    val customerService : CustomerService
+    val bookService : BookService // construtor para injetar dependencias e criar atributo
 ) {
 
     @GetMapping(path = ["/", ""]) // parametro de UTM: RequestParam
@@ -25,10 +23,10 @@ class BookController (
         return ResponseEntity.ok().body(bookService.findAllBooks(name))
     }
 
-    @GetMapping(path = ["/name", "/name/"])
+    @GetMapping(path = ["/customer", "/customer/"])
     @Throws(ResponseStatusException::class)
-    fun findByName(@RequestParam name: String): ResponseEntity<BookDTO> {
-        return ResponseEntity.ok().body(bookService.findByName(name))
+    fun findCustomerByName(@RequestParam name: String): ResponseEntity<CustomerBookDTO> {
+        return ResponseEntity.ok().body(bookService.findCustomerByName(name))
     }
 
     @GetMapping("/status", "/status/")

@@ -1,7 +1,6 @@
 package com.igorborba.crud.domain.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.igorborba.crud.configs.database.DatabaseConfig
 import com.igorborba.crud.domain.valueObjects.BookStatus
 import jakarta.persistence.*
 import lombok.NoArgsConstructor
@@ -14,15 +13,15 @@ class Book (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int?, // UUID é criado no banco de dados e legível para humanos sendo String
-    var name: String,
+    var title: String,
     var price: BigDecimal,
 
     @Enumerated(EnumType.STRING)
     var status: BookStatus?,
 
-//    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    var customerId: String? // associacao
-
+//     @ManyToOne
+//    @JoinColumn(name = "customer_id")
+    @JoinColumn
+    var customerId: String?, // associacao
 ) {
 }

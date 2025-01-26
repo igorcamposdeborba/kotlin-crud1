@@ -1,27 +1,30 @@
 package com.igorborba.crud.service
 
 import com.igorborba.crud.domain.dto.BookDTO
+import com.igorborba.crud.domain.dto.mounted.CustomerBookDTO
 import com.igorborba.crud.domain.entities.Book
 import com.igorborba.crud.domain.entities.Customer
 import com.igorborba.crud.domain.valueObjects.BookStatus
 import com.igorborba.crud.service.repository.BookRepository
+import com.igorborba.crud.service.repository.CustomerRepository
 import com.igorborba.crud.utils.Utils
 import com.igorborba.crud.utils.objectMapper
 import org.springframework.stereotype.Service
 
 @Service
 class BookService (val bookDatabase : BookRepository,
+                   val customerDatabase : CustomerRepository,
                    val customerService: CustomerService) {
 
     val convertToBookDTO : (Book) -> BookDTO = { it -> // não é possível criar com bloco de código no Kotlin porque ele sempre retorna a última linha por ser programação funcional
         objectMapper.convertValue(it, BookDTO::class.java)
     }
 
-    fun findAllBooks(name: String?): List<BookDTO> { // o tipo do dado de entrada e de saída (Book) -> BookDTO devem ser declarados por ser programação funcional
-        return if (name.isNullOrBlank()) {
+    fun findAllBooks(title: String?): List<BookDTO> { // o tipo do dado de entrada e de saída (Book) -> BookDTO devem ser declarados por ser programação funcional
+        return if (title.isNullOrBlank()) {
             bookDatabase.findAll().map(convertToBookDTO)
         } else {
-            bookDatabase.findByNameContaining(name).map(convertToBookDTO)
+            bookDatabase.findByTitleContaining(title).map(convertToBookDTO)
         }
     }
 
@@ -29,8 +32,8 @@ class BookService (val bookDatabase : BookRepository,
         return bookDatabase.findByStatus(BookStatus.valueOf(status.uppercase())).map(convertToBookDTO)
     }
 
-    fun findByName(name: String): BookDTO {
-        return findBook(name)
+    fun findCustomerByName(name: String): CustomerBookDTO {
+        return findCustomer(name)
     }
     fun findById(id: Int): Book {
         return bookDatabase.findById(id).orElseThrow()
@@ -49,7 +52,7 @@ class BookService (val bookDatabase : BookRepository,
 
     fun updateBook(book: BookDTO): BookDTO {
         return runCatching {
-            val bookFinded: Book = if (book.id != null) bookDatabase.findById(book.id!!).orElseThrow() else bookDatabase.findByName(book.name)
+            val bookFinded: Book = if (book.id != null) bookDatabase.findById(book.id!!).orElseThrow() else bookDatabase.findByTitle(book.title)
             if (bookFinded != null){
                 book.id = if (book.id != null) book.id else bookFinded.id
                 book.status = if (book.status != null) book.status else bookFinded.status
@@ -63,7 +66,7 @@ class BookService (val bookDatabase : BookRepository,
         }.getOrThrow()
     }
     fun deleteByName(name: String): Unit {
-        bookDatabase.delete(Utils.convertValue(findByName(name), Book::class.java))
+        bookDatabase.delete(Utils.convertValue(findByTitle(name), Book::class.java))
     }
 
     fun deleteById(id: Int): Unit {
@@ -72,8 +75,24 @@ class BookService (val bookDatabase : BookRepository,
 
     private fun findBook(value: String): BookDTO {
         return runCatching {
-            Utils.convertValue(bookDatabase.findByName(value), BookDTO::class.java)
+            Utils.convertValue(bookDatabase.findByTitle(value), BookDTO::class.java)
         }.getOrThrow()
     }
 
+    private fun findByTitle(value: String): BookDTO {
+        return runCatching {
+            Utils.convertValue(bookDatabase.findByTitle(value), BookDTO::class.java)
+        }.getOrThrow()
+    }
+
+    private fun findCustomer(name: String): CustomerBookDTO {
+        return runCatching {
+            val customersFilteredByName : List<Customer> = customerService.findAllCustomer(name)
+            val booksFiltered : List<Book> = bookDatabase.findByCustomerId(customersFilteredByName.get(0).id.toString()) // !todo: corrigir esse get(0) -> colocar lógica para pegar o customer certo
+
+             val booksDTO : List<BookDTO>  = booksFiltered.map(convertToBookDTO)
+
+            CustomerBookDTO(customersFilteredByName.get(0).name, booksDTO)
+        }.getOrThrow()
+    }
 }
