@@ -36,8 +36,8 @@ class CustomerController (
     @PostMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.CREATED)
     fun createCustomer(@Valid @RequestBody customerDTO: CustomerDTO): ResponseEntity<CustomerDTO?> {
-
         val uri: URI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(customerDTO).toUri()
+
         return runCatching {
             ResponseEntity.created(uri).body(customerService.createCustomer(customerDTO))
         }.getOrThrow()

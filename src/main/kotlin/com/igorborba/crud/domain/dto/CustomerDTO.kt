@@ -3,7 +3,6 @@ package com.igorborba.crud.domain.dto
 import jakarta.annotation.Nullable
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
-import java.util.UUID
 
 class CustomerDTO(
     @Nullable
@@ -15,5 +14,4 @@ class CustomerDTO(
     val email: String,
     var cpf: String? = null
 ) {
-//    var id: UUID = UUID.randomUUID()
 }

@@ -4,7 +4,7 @@ DROP DATABASE customer_test;
 USE customer_test;
 
 CREATE TABLE IF NOT EXISTS customer(
-	 id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+	id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     email VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     cpf VARCHAR(14),
@@ -23,3 +23,13 @@ INSERT INTO customer (name, email, cpf) VALUES ("Teste", "teste@teste.com", NULL
 											   ("Andressa", "andressa@hotmail.com", "045.987.445-20");
 
 DELETE FROM customer WHERE email = "igor@hotmail.com";
+
+-- ------------------------------------------------
+ CREATE TABLE book(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    customer_id CHAR(36) NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer(id)
+ )
