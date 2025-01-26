@@ -27,9 +27,12 @@ DELETE FROM customer WHERE email = "igor@hotmail.com";
 -- ------------------------------------------------
  CREATE TABLE book(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL UNIQUE,
     price DECIMAL(10, 2) NOT NULL,
     status VARCHAR(255) NOT NULL,
     customer_id CHAR(36) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer(id)
- )
+ );
+ DROP TABLE book;
+ 
+ select * from book;

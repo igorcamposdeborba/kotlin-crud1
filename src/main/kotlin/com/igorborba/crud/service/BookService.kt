@@ -1,9 +1,6 @@
 package com.igorborba.crud.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.convertValue
 import com.igorborba.crud.domain.dto.BookDTO
-import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.domain.entities.Book
 import com.igorborba.crud.domain.entities.Customer
 import com.igorborba.crud.domain.valueObjects.BookStatus
@@ -24,15 +21,15 @@ class BookService (val bookDatabase : BookRepository,
         return if (name.isNullOrBlank()) {
             bookDatabase.findAll().map(convertToBookDTO)
         } else {
-            bookDatabase.findAllByNameContaining(name).map(convertToBookDTO)
+            bookDatabase.findByNameContaining(name).map(convertToBookDTO)
         }
     }
 
     fun findByName(name: String): BookDTO {
         return findBook(name)
     }
-    fun findById(id: String): BookDTO {
-        return Utils.convertValue(bookDatabase.findById(id), BookDTO::class.java)
+    fun findById(id: Int): Book {
+        return bookDatabase.findById(id).orElseThrow()
     }
 
     fun createBook(bookDTO: BookDTO): BookDTO {
@@ -45,26 +42,14 @@ class BookService (val bookDatabase : BookRepository,
             return objectMapper.convertValue(bookSaved, BookDTO::class.java)
         }.getOrThrow()
     }
-//    fun createBook(bookDTO: BookDTO): BookDTO {
-//        runCatching {
-//            bookDTO.status = BookStatus.ATIVO
-//            val customerEntity : Customer = customerService.findById(bookDTO.customerId)
-//
-//            var bookEntity : Book = Utils.convertValue(bookDTO, Book::class.java)
-//            bookEntity.customer = customerEntity
-//
-//            val bookSaved : Book = bookDatabase.save(bookEntity)
-//            return objectMapper.convertValue(bookSaved, BookDTO::class.java)
-//        }.getOrThrow()
-//    }
 
     fun updateBook(book: BookDTO): BookDTO {
         return runCatching {
             val bookFinded: Book = bookDatabase.findByName(book.name)
             if (bookFinded != null){
                 book.id = bookFinded.id
-                val customer : Customer = customerService.findById(book.customerId);
-                book.customerId = customer.id
+                book.status = bookFinded.status
+                book.customerId = bookFinded.customerId
                 val bookUpdated : Book = Utils.convertValue(book, Book::class.java)
                 return Utils.convertValue(bookDatabase.save(bookUpdated), BookDTO::class.java)
             } else {
@@ -75,6 +60,10 @@ class BookService (val bookDatabase : BookRepository,
     }
     fun deleteByName(name: String): Unit {
         bookDatabase.delete(Utils.convertValue(findByName(name), Book::class.java))
+    }
+
+    fun deleteById(id: Int): Unit {
+        bookDatabase.delete(bookDatabase.findById(id).orElseThrow())
     }
 
     private fun findBook(value: String): BookDTO {

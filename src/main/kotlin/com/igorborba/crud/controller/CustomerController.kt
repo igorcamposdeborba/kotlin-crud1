@@ -33,7 +33,7 @@ class CustomerController (
         return ResponseEntity.ok().body(convertToCustomerDTO(customerService.findByEmail(email)))
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     @Throws(ResponseStatusException::class)
     fun findById(@PathVariable id: String): ResponseEntity<CustomerDTO> {
         return ResponseEntity.ok().body(convertToCustomerDTO(customerService.findById(id)))

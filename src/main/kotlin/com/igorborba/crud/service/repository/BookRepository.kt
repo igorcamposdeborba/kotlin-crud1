@@ -12,7 +12,7 @@ import java.util.UUID
 @Repository
 interface BookRepository: JpaRepository<Book, Int> { // : significa extends (herança)
 
-    fun findAllByNameContaining(name: String?): List<Book>  // Modificado de "findAllByName" para "findByName"
+    fun findByNameContaining(name: String): List<Book>
 
     fun findByName(name: String): Book
 

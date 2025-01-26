@@ -4,6 +4,7 @@ import com.igorborba.crud.domain.dto.BookDTO
 import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.service.BookService
 import com.igorborba.crud.service.CustomerService
+import com.igorborba.crud.utils.Utils
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -24,16 +25,16 @@ class BookController (
         return ResponseEntity.ok().body(bookService.findAllBooks(name))
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping(path = ["/name", "/name/"])
     @Throws(ResponseStatusException::class)
-    fun findByName(@PathVariable name: String): ResponseEntity<BookDTO> {
+    fun findByName(@RequestParam name: String): ResponseEntity<BookDTO> {
         return ResponseEntity.ok().body(bookService.findByName(name))
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     @Throws(ResponseStatusException::class)
-    fun findById(@PathVariable id: String): ResponseEntity<BookDTO> {
-        return ResponseEntity.ok().body(bookService.findById(id))
+    fun findById(@PathVariable id: Int): ResponseEntity<BookDTO> {
+        return ResponseEntity.ok().body(Utils.convertValue(bookService.findById(id), BookDTO::class.java))
     }
 
     @PostMapping(path = ["/", ""])
@@ -54,7 +55,13 @@ class BookController (
 
     @DeleteMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteBook(@RequestBody name: String): Unit {
+    fun deleteBookByName(@RequestBody name: String): Unit {
         bookService.deleteByName(name)
+    }
+
+    @DeleteMapping("/id/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteBookByID(@PathVariable id: Int): Unit {
+        bookService.deleteById(id)
     }
 }
