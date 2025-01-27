@@ -12,5 +12,7 @@ interface CustomerRepository: JpaRepository<Customer, UUID> { // : significa ext
 
     fun findByEmail(email: String?): Customer
 
+    fun existsByEmail(email: String): Boolean
+
     fun findById(id: String?): Customer
 }

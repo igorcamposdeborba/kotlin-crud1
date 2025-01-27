@@ -36,7 +36,7 @@ class BookService (val bookDatabase : BookRepository,
 
     fun findById(id: Int): Book {
         return bookDatabase.findById(id)
-            .orElseThrow{ NotFoundException(ExceptionMessages.EX100.message.format(id), ExceptionMessages.EX100.code) } // Código de erro específico EX-0001
+            .orElseThrow()
     }
 
     fun createBook(bookDTO: BookDTO): BookDTO {

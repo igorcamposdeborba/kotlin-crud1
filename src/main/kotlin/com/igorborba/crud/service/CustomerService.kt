@@ -79,4 +79,8 @@ class CustomerService (val customersDatabase : CustomerRepository,
         }.getOrThrow()
     }
 
+    fun emailAvailable(email: String): Boolean{
+        return ! customersDatabase.existsByEmail(email) // !: se existir, retorne false para usar na validação EmailAvailableValidator
+    }
+
 }
