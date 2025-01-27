@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.igorborba.crud.configs.database.DatabaseConfig
 import com.igorborba.crud.domain.valueObjects.CustomerStatus
 import jakarta.persistence.*
+import jakarta.validation.constraints.Email
 import lombok.NoArgsConstructor
 
 @Entity(name = "customer")

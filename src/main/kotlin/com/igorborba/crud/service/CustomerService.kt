@@ -41,7 +41,7 @@ class CustomerService (val customersDatabase : CustomerRepository,
         return runCatching {
             val customerFinded: Customer = customersDatabase.findByEmail(customer.email)
 
-            if (customerFinded != null && customerFinded.status != CustomerStatus.DELETADO && customerFinded.status != CustomerStatus.DESATIVADO){
+            if (customerFinded != null){
                 customer.id = customerFinded.id
                 customer.status = if (customer.status != null) customer.status else customerFinded.status
                 val customerUpdated : Customer = Utils.convertValue(customer, Customer::class.java)

@@ -51,7 +51,7 @@ class CustomerController (
     @PutMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    fun updateCustomer(@RequestBody customer: CustomerDTO): ResponseEntity<CustomerDTO>{
+    fun updateCustomer(@Valid @RequestBody customer: CustomerDTO): ResponseEntity<CustomerDTO>{
         return ResponseEntity.ok().body(convertToCustomerDTO(customerService.updateCustomer(customer)))
     }
 
