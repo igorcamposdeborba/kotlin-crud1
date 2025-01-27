@@ -1,15 +1,15 @@
 package com.igorborba.crud.service
 
 import com.igorborba.crud.domain.dto.BookDTO
-import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.domain.dto.mounted.CustomerBookDTO
 import com.igorborba.crud.domain.entities.Book
 import com.igorborba.crud.domain.entities.Customer
 import com.igorborba.crud.domain.valueObjects.BookStatus
 import com.igorborba.crud.service.repository.BookRepository
-import com.igorborba.crud.service.repository.CustomerRepository
 import com.igorborba.crud.utils.Utils
 import com.igorborba.crud.utils.objectMapper
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,11 +20,18 @@ class BookService (val bookDatabase : BookRepository,
         objectMapper.convertValue(it, BookDTO::class.java)
     }
 
-    fun findAllBooks(title: String?): List<BookDTO> { // o tipo do dado de entrada e de saída (Book) -> BookDTO devem ser declarados por ser programação funcional
+//    fun findAllBooks(title: String?): List<BookDTO> { // o tipo do dado de entrada e de saída (Book) -> BookDTO devem ser declarados por ser programação funcional
+//        return if (title.isNullOrBlank()) {
+//            bookDatabase.findAll().map(convertToBookDTO)
+//        } else {
+//            bookDatabase.findByTitleContaining(title).map(convertToBookDTO)
+//        }
+//    }
+    fun findAllBooks(title: String?, pageable: Pageable): Page<BookDTO> { // o tipo do dado de entrada e de saída (Book) -> BookDTO devem ser declarados por ser programação funcional
         return if (title.isNullOrBlank()) {
-            bookDatabase.findAll().map(convertToBookDTO)
+            bookDatabase.findAll(pageable).map(convertToBookDTO)
         } else {
-            bookDatabase.findByTitleContaining(title).map(convertToBookDTO)
+            bookDatabase.findByTitleContaining(title, pageable).map(convertToBookDTO)
         }
     }
 

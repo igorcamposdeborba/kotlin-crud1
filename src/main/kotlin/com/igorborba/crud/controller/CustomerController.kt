@@ -1,11 +1,9 @@
 package com.igorborba.crud.controller
 
 import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.module.kotlin.convertValue
 import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.domain.entities.Customer
 import com.igorborba.crud.service.CustomerService
-import com.igorborba.crud.utils.Utils
 import com.igorborba.crud.utils.objectMapper
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.net.URI
-import java.util.Collections
 
 @RestController
 @RequestMapping("/customer")

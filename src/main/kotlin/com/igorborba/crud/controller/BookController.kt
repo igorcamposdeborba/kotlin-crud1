@@ -1,10 +1,15 @@
 package com.igorborba.crud.controller
 
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.igorborba.crud.domain.dto.BookDTO
 import com.igorborba.crud.domain.dto.mounted.CustomerBookDTO
 import com.igorborba.crud.service.BookService
 import com.igorborba.crud.utils.Utils
+import com.igorborba.crud.utils.objectMapper
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -18,9 +23,14 @@ class BookController (
     val bookService : BookService // construtor para injetar dependencias e criar atributo
 ) {
 
+//    @GetMapping(path = ["/", ""]) // parametro de UTM: RequestParam
+//    fun findAllBooks(@RequestParam name: String?): ResponseEntity<List<BookDTO>> {
+//        return ResponseEntity.ok().body(bookService.findAllBooks(name))
+//    }
+
     @GetMapping(path = ["/", ""]) // parametro de UTM: RequestParam
-    fun findAllBooks(@RequestParam name: String?): ResponseEntity<List<BookDTO>> {
-        return ResponseEntity.ok().body(bookService.findAllBooks(name))
+    fun findAllBooks(@RequestParam name: String?, @PageableDefault(page = 0, size = 10) pageable : Pageable): ResponseEntity<Page<BookDTO>> {
+        return ResponseEntity.ok().body(bookService.findAllBooks(name, pageable))
     }
 
     @GetMapping(path = ["/customer", "/customer/"])

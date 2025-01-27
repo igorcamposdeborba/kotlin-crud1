@@ -1,6 +1,5 @@
 package com.igorborba.crud.service
 
-import com.igorborba.crud.domain.dto.BookDTO
 import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.domain.entities.Book
 import com.igorborba.crud.domain.entities.Customer
@@ -10,10 +9,7 @@ import com.igorborba.crud.service.repository.BookRepository
 import com.igorborba.crud.service.repository.CustomerRepository
 import com.igorborba.crud.utils.Utils
 import com.igorborba.crud.utils.objectMapper
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
-import java.util.Objects
-import java.util.UUID
 
 @Service
 class CustomerService (val customersDatabase : CustomerRepository,

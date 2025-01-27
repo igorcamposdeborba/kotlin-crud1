@@ -6,7 +6,6 @@ import com.igorborba.crud.domain.valueObjects.BookStatus
 import jakarta.annotation.Nullable
 import jakarta.validation.constraints.NotBlank
 import java.math.BigDecimal
-import java.util.UUID
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class BookDTO(

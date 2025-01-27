@@ -3,7 +3,6 @@ package com.igorborba.crud.domain.entities
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.igorborba.crud.domain.valueObjects.BookStatus
 import jakarta.persistence.*
-import lombok.AllArgsConstructor
 import lombok.NoArgsConstructor
 import java.math.BigDecimal
 
