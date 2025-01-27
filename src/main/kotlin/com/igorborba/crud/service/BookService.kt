@@ -19,14 +19,7 @@ class BookService (val bookDatabase : BookRepository,
     val convertToBookDTO : (Book) -> BookDTO = { it -> // não é possível criar com bloco de código no Kotlin porque ele sempre retorna a última linha por ser programação funcional
         objectMapper.convertValue(it, BookDTO::class.java)
     }
-
-//    fun findAllBooks(title: String?): List<BookDTO> { // o tipo do dado de entrada e de saída (Book) -> BookDTO devem ser declarados por ser programação funcional
-//        return if (title.isNullOrBlank()) {
-//            bookDatabase.findAll().map(convertToBookDTO)
-//        } else {
-//            bookDatabase.findByTitleContaining(title).map(convertToBookDTO)
-//        }
-//    }
+    
     fun findAllBooks(title: String?, pageable: Pageable): Page<BookDTO> { // o tipo do dado de entrada e de saída (Book) -> BookDTO devem ser declarados por ser programação funcional
         return if (title.isNullOrBlank()) {
             bookDatabase.findAll(pageable).map(convertToBookDTO)

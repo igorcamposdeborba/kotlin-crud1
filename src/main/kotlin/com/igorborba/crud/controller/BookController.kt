@@ -23,11 +23,6 @@ class BookController (
     val bookService : BookService // construtor para injetar dependencias e criar atributo
 ) {
 
-//    @GetMapping(path = ["/", ""]) // parametro de UTM: RequestParam
-//    fun findAllBooks(@RequestParam name: String?): ResponseEntity<List<BookDTO>> {
-//        return ResponseEntity.ok().body(bookService.findAllBooks(name))
-//    }
-
     @GetMapping(path = ["/", ""]) // parametro de UTM: RequestParam
     fun findAllBooks(@RequestParam name: String?, @PageableDefault(page = 0, size = 10) pageable : Pageable): ResponseEntity<Page<BookDTO>> {
         return ResponseEntity.ok().body(bookService.findAllBooks(name, pageable))
