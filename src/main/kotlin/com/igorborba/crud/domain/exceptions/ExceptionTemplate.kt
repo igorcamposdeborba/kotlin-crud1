@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class ExceptionTemplate (
     var timestamp: LocalDateTime,
     var code: Int,
-    var error: String,
-    var message: String
+    var errorCode: String,
+    var errors: List<FieldErrorResponse>?
 ){
 }
