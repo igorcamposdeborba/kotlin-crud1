@@ -8,12 +8,12 @@ import jakarta.validation.constraints.NotBlank
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class CustomerDTO(
-    @Nullable
+    @field:Nullable
     var id: String?,
-    @NotBlank (message = "O nome é obrigatório")
+    @field:NotBlank (message = "O nome é obrigatório")
     var name: String,
-    @NotBlank (message = "O e-mail é obrigatório")
-    @Email (message = "O e-mail foi digitado errado")
+    @field:NotBlank (message = "O e-mail é obrigatório")
+    @field:Email (message = "O e-mail foi digitado errado")
     val email: String,
     var cpf: String?,
     var status: CustomerStatus?

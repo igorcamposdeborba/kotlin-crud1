@@ -9,15 +9,15 @@ import java.math.BigDecimal
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class BookDTO(
-    @Nullable
+    @field:Nullable
     var id: Int?,
-    @NotBlank (message = "O título é obrigatório")
+    @field:NotBlank (message = "O título é obrigatório")
     var title: String,
-    @NotBlank (message = "O preço é obrigatório")
+    @field:NotBlank (message = "O preço é obrigatório")
     var price: BigDecimal,
     var status: BookStatus?,
 
-    @JsonAlias("customer_id")
+    @field:JsonAlias("customer_id")
     var customerId: String?
 ) {
 }
