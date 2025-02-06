@@ -1,16 +1,16 @@
 package com.igorborba.crud.domain.dto
 
-import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.NotNull
 
 data class PurchaseDTO (
 
     @field:NotNull
-    @field:JsonAlias("customer_id")
+    @field:JsonProperty(value = "customer_id")
     val customerId: String,
 
     @field:NotNull
-    @field:JsonAlias(value = ["book_ids"])
+    @field:JsonProperty(value = "book_ids")
     val bookIds: Set<Int>
 ) {
 

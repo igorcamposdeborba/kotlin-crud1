@@ -50,20 +50,24 @@ WHERE c.name = 'Igor';
 -- ------------------------------------------------
 
 CREATE TABLE purchase (
-	id INT AUTO_INCREMENT PRIMARY KEY,
+	id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     customer_id CHAR(36) NOT NULL,
 	nfe VARCHAR(255),
+    total_price DECIMAL(15, 2) NOT NULL,
     created_at DATETIME NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 
 -- PK composta
 CREATE TABLE purchase_book (
-	purchase_id INT NOT NULL,
+	purchase_id CHAR(36) NOT NULL DEFAULT (UUID()),
     book_id INT NOT NULL,
     FOREIGN KEY (purchase_id) REFERENCES purchase(id),
     FOREIGN KEY (book_id) REFERENCES book(id),
     PRIMARY KEY (purchase_id, book_id)
 );
 
+DROP TABLE purchase_book, purchase;
 
+SELECT * FROM purchase;
+SELECT * FROM purchase_book;
