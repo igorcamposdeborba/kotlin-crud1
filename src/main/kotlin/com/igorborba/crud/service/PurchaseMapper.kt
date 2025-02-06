@@ -2,7 +2,9 @@ package com.igorborba.crud.service
 
 import com.igorborba.crud.domain.dto.PurchaseDTO
 import com.igorborba.crud.domain.entities.Purchase
+import org.springframework.stereotype.Component
 
+@Component
 class PurchaseMapper(
     private val bookService: BookService,
     private val customerService: CustomerService) {
