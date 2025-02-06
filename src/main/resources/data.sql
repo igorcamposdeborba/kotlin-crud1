@@ -46,3 +46,24 @@ SELECT c.name, b.*
 FROM Book b
 JOIN Customer c ON b.customer_id = c.id
 WHERE c.name = 'Igor';
+
+-- ------------------------------------------------
+
+CREATE TABLE purchase (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id CHAR(36) NOT NULL,
+	nfe VARCHAR(255),
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer(id)
+);
+
+-- PK composta
+CREATE TABLE purchase_book (
+	purchase_id INT NOT NULL,
+    book_id INT NOT NULL,
+    FOREIGN KEY (purchase_id) REFERENCES purchase(id),
+    FOREIGN KEY (book_id) REFERENCES book(id),
+    PRIMARY KEY (purchase_id, book_id)
+);
+
+

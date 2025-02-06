@@ -38,6 +38,9 @@ class BookService (val bookDatabase : BookRepository,
         return bookDatabase.findById(id)
             .orElseThrow()
     }
+    fun findById(ids: Set<Int>): List<Book> {
+        return bookDatabase.findAllById(ids).toList()
+    }
 
     fun createBook(bookDTO: BookDTO): BookDTO {
         runCatching {
@@ -99,6 +102,11 @@ class BookService (val bookDatabase : BookRepository,
         }.getOrThrow()
     }
 
-
+    fun purchase(books : MutableList<Book>): Unit {
+        books.map{
+            it.status = BookStatus.VENDIDO
+        }
+        bookDatabase.saveAll(books)
+    }
 
 }
