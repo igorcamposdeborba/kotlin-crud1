@@ -2,6 +2,7 @@ package com.igorborba.crud.controller
 
 import com.igorborba.crud.domain.dto.PurchaseDTO
 import com.igorborba.crud.service.PurchaseService
+import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -17,6 +18,7 @@ class PurchaseController (
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     fun purchase(@RequestBody requestPurchase: PurchaseDTO){
         purchaseService.create(requestPurchase)
     }

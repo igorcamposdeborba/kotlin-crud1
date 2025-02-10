@@ -3,6 +3,7 @@ package com.igorborba.crud.event
 import com.igorborba.crud.domain.entities.Purchase
 import com.igorborba.crud.service.PurchaseService
 import org.springframework.context.event.EventListener
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import java.util.UUID
 import kotlin.uuid.ExperimentalUuidApi
@@ -12,6 +13,7 @@ import kotlin.uuid.Uuid
 @Component
 class NfeListener (private val purchaseService: PurchaseService) {
 
+    @Async // todo: tornar eventos assíncronos porque ordem não importa
     @EventListener
     fun listen(purchaseEvent: PurchaseEvent): Unit {
         val nfe: String = UUID.randomUUID().toString()

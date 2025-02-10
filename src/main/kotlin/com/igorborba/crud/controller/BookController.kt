@@ -6,6 +6,7 @@ import com.igorborba.crud.domain.dto.mounted.CustomerBookDTO
 import com.igorborba.crud.service.BookService
 import com.igorborba.crud.utils.Utils
 import com.igorborba.crud.utils.objectMapper
+import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -47,6 +48,7 @@ class BookController (
 
     @PostMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     fun createBook(@Valid @RequestBody bookDTO: BookDTO): ResponseEntity<BookDTO?> {
         val uri: URI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(bookDTO).toUri()
 
@@ -57,18 +59,21 @@ class BookController (
 
     @PutMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     fun updateBook(@RequestBody book: BookDTO): ResponseEntity<BookDTO>{
         return ResponseEntity.ok().body(bookService.updateBook(book))
     }
 
     @DeleteMapping(path = ["/", ""])
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     fun deleteBookByName(@RequestBody name: String): Unit {
         bookService.deleteByName(name)
     }
 
     @DeleteMapping("/id/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     fun deleteBookByID(@PathVariable id: Int): Unit {
         bookService.deleteById(id)
     }
