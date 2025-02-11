@@ -7,4 +7,5 @@ object ExceptionAttributes {
     const val EMAIL_REGISTERED: String = "O e-mail já está cadastrado"
     const val TITLE_REQUIRED: String = "O título é obrigatório"
     const val PRICE_REQUIRED: String = "O preço é obrigatório"
+    const val PASSWORD_REQUIRED: String = "A senha é obrigatória"
 }
