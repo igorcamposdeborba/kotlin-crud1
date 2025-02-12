@@ -3,6 +3,7 @@ package com.igorborba.crud.service.login
 import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.domain.dto.login.UserLoginDTO
 import com.igorborba.crud.domain.entities.login.Login
+import com.igorborba.crud.domain.valueObjects.login.LoginStatus
 import com.igorborba.crud.service.CustomerService
 import com.igorborba.crud.service.repository.LoginRepository
 import com.igorborba.crud.utils.objectMapper
@@ -17,7 +18,9 @@ class LoginService(val loginDatabase : LoginRepository,
         runCatching {
             customerService.createCustomer(objectMapper.convertValue(userLoginDTO, CustomerDTO::class.java))
 
-            return loginDatabase.save(objectMapper.convertValue(userLoginDTO, Login::class.java))
+            val newUser : Login = objectMapper.convertValue(userLoginDTO, Login::class.java)
+            newUser.status = LoginStatus.ATIVO
+            return loginDatabase.save(newUser)
         }.getOrThrow()
     }
 

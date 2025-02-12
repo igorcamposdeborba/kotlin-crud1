@@ -12,11 +12,11 @@ class PurchaseMapper(
     private val bookService: BookService) {
 
     fun purchaseDTOtoEntity(request: PurchaseDTO): Purchase {
-        val customer: Customer = customerService.findById(request.customerId)
+        val customer: Customer? = customerService.findById(request.customerId)
         val books: List<Book> = bookService.findById(request.bookIds)
 
         return Purchase(
-            customer = customer,
+            customer = customer!!,
             books = books.toMutableList(),
             totalPrice = books.sumOf { it.price }
         )

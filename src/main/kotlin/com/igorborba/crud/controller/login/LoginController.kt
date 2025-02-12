@@ -28,7 +28,7 @@ class LoginController (
         val uri: URI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userLoginDTO).toUri()
 
         runCatching {
-            ResponseEntity.created(uri).body(convertToUserDTO(loginService.signup(userLoginDTO)))
+            ResponseEntity.created(uri).body(loginService.signup(userLoginDTO))
         }.getOrThrow()
     }
 

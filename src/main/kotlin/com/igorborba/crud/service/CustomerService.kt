@@ -23,18 +23,18 @@ class CustomerService (val customersDatabase : CustomerRepository,
         }
     }
 
-    fun findByEmail(email: String): Customer {
+    fun findByEmail(email: String): Customer? {
         return findCustomer(email)
     }
-    fun findById(id: String?): Customer {
+    fun findById(id: String?): Customer? {
         return findCustomer(id)
     }
 
     fun createCustomer(customerDTO: CustomerDTO): Customer {
         runCatching {
-            val customerFinded: Customer = customersDatabase.findByEmail(customerDTO.email)
+            val customerFinded: Customer? = customersDatabase.findByEmail(customerDTO.email)
 
-            if (customerFinded != null){
+            if (customerFinded == null){
                 customerDTO.status = CustomerStatus.ATIVO
                 return customersDatabase.save(objectMapper.convertValue(customerDTO, Customer::class.java))
             } else {
@@ -45,7 +45,7 @@ class CustomerService (val customersDatabase : CustomerRepository,
 
     fun updateCustomer(customer: CustomerDTO): Customer {
         return runCatching {
-            val customerFinded: Customer = customersDatabase.findByEmail(customer.email)
+            val customerFinded: Customer? = customersDatabase.findByEmail(customer.email)
 
             if (customerFinded != null){
                 customer.id = customerFinded.id
@@ -53,29 +53,33 @@ class CustomerService (val customersDatabase : CustomerRepository,
                 val customerUpdated : Customer = Utils.convertValue(customer, Customer::class.java)
                 return customersDatabase.save(customerUpdated)
             } else {
-                throw IllegalArgumentException("Não é possível alterar quando o status é ${customerFinded.status}")
+                throw IllegalArgumentException("Não é possível alterar quando o status é ${customerFinded?.status}")
             }
 
         }.getOrThrow()
     }
     fun deleteCustomer(email: String): Unit {
-        val customer : Customer = findByEmail(email)
+        val customer : Customer? = findByEmail(email)
 
         deleteBook(customer) // DELETE LÓGICO (muda status para deletado)
-        customer.status = CustomerStatus.DELETADO
-        customersDatabase.save(customer)
+        customer?.status = CustomerStatus.DELETADO
+        runCatching {
+            if (customer != null) {
+                customersDatabase.save(customer)
+            }
+        }.getOrThrow()
 
 //      customersDatabase.delete(Utils.convertValue(customer, Customer::class.java)) // deleção persistente (caso seja implementado, mudar o deleteBook(customer) para deletar do banco de dados os livros)
     }
-    private fun deleteBook(customer: Customer) {
-        val books: List<Book> = bookDatabase.findByCustomerId(customer.id.toString())
+    private fun deleteBook(customer: Customer?) {
+        val books: List<Book> = bookDatabase.findByCustomerId(customer?.id.toString())
         books.forEach{ it.status = BookStatus.DELETADO }
 
         bookDatabase.saveAll(books)
 //        bookDatabase.deleteAll(books) // deleção persistente (caso seja implementado, descomentar para deletar do banco de dados os livros)
     }
 
-    private fun findCustomer(value: String?): Customer {
+    private fun findCustomer(value: String?): Customer? {
         return runCatching {
             if (value.toString().contains("@")){
                 customersDatabase.findByEmail(value)

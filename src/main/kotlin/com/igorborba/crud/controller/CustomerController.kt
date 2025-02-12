@@ -27,14 +27,14 @@ class CustomerController (
 
     @PostMapping("/email")
     @Throws(ResponseStatusException::class)
-    fun findByEmail(@RequestBody email: String): ResponseEntity<CustomerDTO> {
-        return ResponseEntity.ok().body(convertToCustomerDTO(customerService.findByEmail(email)))
+    fun findByEmail(@RequestBody email: String): ResponseEntity<CustomerDTO?> {
+        return ResponseEntity.ok().body(customerService.findByEmail(email)?.let { convertToCustomerDTO(it) })
     }
 
     @GetMapping("/{id}")
     @Throws(ResponseStatusException::class)
     fun findById(@PathVariable id: String): ResponseEntity<CustomerDTO> {
-        return ResponseEntity.ok().body(convertToCustomerDTO(customerService.findById(id)))
+        return ResponseEntity.ok().body(customerService.findById(id)?.let { convertToCustomerDTO(it) })
     }
 
     @PostMapping(path = ["/", ""])

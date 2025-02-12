@@ -16,8 +16,8 @@ class Login (
     @Id
     val email: String,
     var password: String,
+    @Enumerated(EnumType.STRING)
+    var status: LoginStatus? = LoginStatus.ATIVO,
     val createdAt: LocalDateTime = LocalDateTime.now()
 ) {
-    @Enumerated(EnumType.STRING)
-    var status: LoginStatus? = LoginStatus.ATIVO
 }
