@@ -6,7 +6,7 @@ USE customer_test;
 CREATE TABLE IF NOT EXISTS customer(
 	id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     email VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255),
     cpf VARCHAR(14),
     status ENUM('ATIVO', 'DESATIVADO', 'DELETADO') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -71,3 +71,15 @@ DROP TABLE purchase_book, purchase;
 
 SELECT * FROM purchase;
 SELECT * FROM purchase_book;
+
+-- ------------------------------------------------
+
+DROP TABLE login;
+
+CREATE TABLE IF NOT EXISTS login(
+	email VARCHAR(255) PRIMARY KEY,
+    password VARCHAR(255) NOT NULL,
+    status ENUM('ATIVO', 'SUSPENSO', 'DELETADO') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

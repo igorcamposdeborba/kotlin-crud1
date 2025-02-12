@@ -13,8 +13,7 @@ import jakarta.validation.constraints.NotBlank
 data class CustomerDTO(
     @field:Nullable
     var id: String?,
-    @field:NotBlank (message = ExceptionAttributes.NAME_REQUIRED)
-    var name: String,
+    var name: String?,
     @field:NotBlank (message = ExceptionAttributes.EMAIL_REQUIRED)
     @field:Email (message = ExceptionAttributes.EMAIL_MALFORMED)
     @field:EmailAvailable // annotation criada por mim de exception para validação: para economizar consultas complexas ao banco de dados

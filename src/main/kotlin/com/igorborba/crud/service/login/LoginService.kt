@@ -1,5 +1,6 @@
 package com.igorborba.crud.service.login
 
+import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.domain.dto.login.UserLoginDTO
 import com.igorborba.crud.domain.entities.login.Login
 import com.igorborba.crud.service.CustomerService
@@ -14,6 +15,7 @@ class LoginService(val loginDatabase : LoginRepository,
 
     fun signup(userLoginDTO: UserLoginDTO): Login {
         runCatching {
+            customerService.createCustomer(objectMapper.convertValue(userLoginDTO, CustomerDTO::class.java))
             return loginDatabase.save(objectMapper.convertValue(userLoginDTO, Login::class.java))
         }.getOrThrow()
     }

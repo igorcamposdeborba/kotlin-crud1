@@ -5,7 +5,6 @@ import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.domain.dto.login.UserLoginDTO
 import com.igorborba.crud.domain.entities.Customer
 import com.igorborba.crud.domain.entities.login.Login
-import com.igorborba.crud.service.CustomerService
 import com.igorborba.crud.service.login.LoginService
 import com.igorborba.crud.utils.objectMapper
 import jakarta.transaction.Transactional

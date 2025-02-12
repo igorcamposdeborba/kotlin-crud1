@@ -15,7 +15,7 @@ class Customer (
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(length = DatabaseConfig.ID_LENGTH_MYSQL, unique = DatabaseConfig.IS_UNIQUE, nullable = DatabaseConfig.IS_NULLABLE)
     var id: String?, // UUID é criado no banco de dados e legível para humanos sendo String
-    var name: String,
+    var name: String?,
     var email: String?,
     var cpf: String?,
     @Enumerated(EnumType.STRING)
