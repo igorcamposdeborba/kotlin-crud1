@@ -32,8 +32,14 @@ class CustomerService (val customersDatabase : CustomerRepository,
 
     fun createCustomer(customerDTO: CustomerDTO): Customer {
         runCatching {
-            customerDTO.status = CustomerStatus.ATIVO
-            return customersDatabase.save(objectMapper.convertValue(customerDTO, Customer::class.java))
+            val customerFinded: Customer = customersDatabase.findByEmail(customerDTO.email)
+
+            if (customerFinded != null){
+                customerDTO.status = CustomerStatus.ATIVO
+                return customersDatabase.save(objectMapper.convertValue(customerDTO, Customer::class.java))
+            } else {
+                throw IllegalArgumentException("Já existe um usuário com este email ${customerFinded?.email}")
+            }
         }.getOrThrow()
     }
 
