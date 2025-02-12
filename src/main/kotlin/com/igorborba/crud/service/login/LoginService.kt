@@ -16,6 +16,7 @@ class LoginService(val loginDatabase : LoginRepository,
     fun signup(userLoginDTO: UserLoginDTO): Login {
         runCatching {
             customerService.createCustomer(objectMapper.convertValue(userLoginDTO, CustomerDTO::class.java))
+
             return loginDatabase.save(objectMapper.convertValue(userLoginDTO, Login::class.java))
         }.getOrThrow()
     }

@@ -97,7 +97,7 @@ class BookService (val bookDatabase : BookRepository,
                 val books: List<Book> = bookDatabase.findByCustomerId(customer.id.toString())
                 val booksDTO = books.map { convertToBookDTO(it) }
 
-                CustomerBookDTO(customer.name, booksDTO)
+                CustomerBookDTO(customer.name!!, booksDTO) //!todo: revisar esse !!
             }
         }.getOrThrow()
     }

@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import lombok.NoArgsConstructor
+import java.time.LocalDateTime
 
 @Entity(name = "login")
 @NoArgsConstructor
@@ -15,7 +16,7 @@ class Login (
     @Id
     val email: String,
     var password: String,
-
+    val createdAt: LocalDateTime = LocalDateTime.now()
 ) {
     @Enumerated(EnumType.STRING)
     var status: LoginStatus? = LoginStatus.ATIVO
