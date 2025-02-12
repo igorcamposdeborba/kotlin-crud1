@@ -1,15 +1,9 @@
 package com.igorborba.crud.service.login
 
-import com.igorborba.crud.domain.dto.CustomerDTO
 import com.igorborba.crud.domain.dto.login.UserLoginDTO
-import com.igorborba.crud.domain.entities.Book
-import com.igorborba.crud.domain.entities.Customer
 import com.igorborba.crud.domain.entities.login.Login
-import com.igorborba.crud.domain.valueObjects.BookStatus
-import com.igorborba.crud.domain.valueObjects.CustomerStatus
 import com.igorborba.crud.service.CustomerService
 import com.igorborba.crud.service.repository.LoginRepository
-import com.igorborba.crud.utils.Utils
 import com.igorborba.crud.utils.objectMapper
 import org.springframework.stereotype.Service
 
@@ -41,6 +35,7 @@ class LoginService(val loginDatabase : LoginRepository,
 
     fun deleteLogin(userLoginDTO: UserLoginDTO): Unit {
         findByEmail(userLoginDTO.email)
+        customerService.deleteCustomer(userLoginDTO.email)
 
         loginDatabase.save(objectMapper.convertValue(userLoginDTO, Login::class.java))
     }
